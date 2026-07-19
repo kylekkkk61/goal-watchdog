@@ -8,6 +8,10 @@
 
 Goal Watchdog is a lightweight macOS menu bar utility that watches the conversation currently displayed in the ChatGPT desktop app. When Goal mode exposes a **Resume goal** button, Goal Watchdog clicks it and restores the previously active app and pointer position.
 
+## Why Goal Watchdog?
+
+Long-running goals can pause because of an unstable local connection, a false-positive safety review, or any other interruption. Goal Watchdog has one purpose: when ChatGPT offers **Resume goal**, click it so the goal can continue to completion; it does not bypass safeguards or controls that ChatGPT has not made available.
+
 ## Features
 
 - Watches only the current ChatGPT main window.
