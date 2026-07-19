@@ -6,6 +6,10 @@
   <a href="README.md">English</a> · <strong>繁體中文</strong>
 </p>
 
+<p align="center">
+  <a href="https://github.com/kylekkkk61/goal-watchdog/releases/download/v0.1.0/goal-watchdog-demo-full-v0.1.0.mp4">▶ 觀看 28 秒展示影片</a>
+</p>
+
 Goal Watchdog 是一款輕量的 macOS 狀態列工具，用來監控 ChatGPT 桌面版目前顯示的對話。當目標模式出現「**恢復目標**」按鈕時，Goal Watchdog 會自動點擊，接著還原原本位於前景的 App 與滑鼠位置。
 
 ## 為什麼需要 Goal Watchdog？

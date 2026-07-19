@@ -6,6 +6,10 @@
   <strong>English</strong> · <a href="README.zh-TW.md">繁體中文</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/kylekkkk61/goal-watchdog/releases/download/v0.1.0/goal-watchdog-demo-full-v0.1.0.mp4">▶ Watch the 28-second demo</a>
+</p>
+
 Goal Watchdog is a lightweight macOS menu bar utility that watches the conversation currently displayed in the ChatGPT desktop app. When Goal mode exposes a **Resume goal** button, Goal Watchdog clicks it and restores the previously active app and pointer position.
 
 ## Why Goal Watchdog?
