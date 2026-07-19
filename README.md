@@ -17,7 +17,7 @@ Long-running goals can pause because of an unstable local connection, a false-po
 - Watches only the current ChatGPT main window.
 - Locates the resume button dynamically through macOS Accessibility.
 - Recognizes `Resume goal`, `恢復目標`, and `恢复目标`.
-- Displays the app and CLI in English or Traditional Chinese according to the preferred macOS language.
+- The app can follow macOS or switch between English and Traditional Chinese from its menu; the CLI follows the preferred macOS language.
 - Does not read goal text, capture the screen, store credentials, or use the network.
 - Runs from Terminal or as a menu bar app without a Dock icon.
 

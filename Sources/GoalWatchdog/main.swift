@@ -6,9 +6,54 @@ let chatGPTBundleIdentifier = "com.openai.codex"
 let pollInterval: TimeInterval = 5
 let retryCooldown: TimeInterval = 15
 let resumeDescriptions = Set(["恢復目標", "恢复目标", "Resume goal"])
+let appLanguageDefaultsKey = "appLanguage"
 
-func localized(_ key: String) -> String {
-    NSLocalizedString(key, comment: "")
+enum AppLanguage: String, CaseIterable {
+    case system
+    case english = "en"
+    case traditionalChinese = "zh-Hant"
+
+    var menuTitleKey: String {
+        switch self {
+        case .system: "language.system"
+        case .english: "language.english"
+        case .traditionalChinese: "language.traditionalChinese"
+        }
+    }
+}
+
+func selectedAppLanguage() -> AppLanguage {
+    guard let value = UserDefaults.standard.string(forKey: appLanguageDefaultsKey) else {
+        return .system
+    }
+    return AppLanguage(rawValue: value) ?? .system
+}
+
+func localized(_ key: String, language: AppLanguage? = nil) -> String {
+    let language = language ?? selectedAppLanguage()
+    guard language != .system,
+          let path = Bundle.main.path(forResource: language.rawValue, ofType: "lproj"),
+          let bundle = Bundle(path: path) else {
+        return NSLocalizedString(key, comment: "")
+    }
+    return bundle.localizedString(forKey: key, value: nil, table: nil)
+}
+
+func formattedTime(_ date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .none
+    formatter.timeStyle = .medium
+
+    switch selectedAppLanguage() {
+    case .system:
+        formatter.locale = .current
+    case .english:
+        formatter.locale = Locale(identifier: "en")
+    case .traditionalChinese:
+        formatter.locale = Locale(identifier: "zh-Hant")
+    }
+
+    return formatter.string(from: date)
 }
 
 func attribute(_ element: AXUIElement, _ name: String) -> CFTypeRef? {
@@ -129,9 +174,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let statusMenuItem = NSMenuItem(title: localized("status.monitoring"), action: nil, keyEquivalent: "")
     private let lastResumeMenuItem = NSMenuItem(title: localized("lastResume.none"), action: nil, keyEquivalent: "")
     private let toggleMenuItem = NSMenuItem(title: localized("action.pause"), action: #selector(toggleMonitoring), keyEquivalent: "")
+    private let languageMenuItem = NSMenuItem(title: localized("menu.language"), action: nil, keyEquivalent: "")
+    private let permissionsMenuItem = NSMenuItem(title: localized("action.settings"), action: #selector(openAccessibilitySettings), keyEquivalent: "")
+    private let quitMenuItem = NSMenuItem(title: localized("action.quit"), action: #selector(quit), keyEquivalent: "q")
+    private var languageMenuItems: [AppLanguage: NSMenuItem] = [:]
     private var timer: Timer?
     private var monitoring = true
     private var nextAllowedPress = Date.distantPast
+    private var currentStatusKey = "status.monitoring"
+    private var lastResumeDate: Date?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         configureMenu()
@@ -147,22 +198,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusMenuItem.isEnabled = false
         lastResumeMenuItem.isEnabled = false
 
-        let permissionsItem = NSMenuItem(title: localized("action.settings"), action: #selector(openAccessibilitySettings), keyEquivalent: "")
-        permissionsItem.target = self
+        permissionsMenuItem.target = self
         toggleMenuItem.target = self
+        quitMenuItem.target = self
 
-        let quitItem = NSMenuItem(title: localized("action.quit"), action: #selector(quit), keyEquivalent: "q")
-        quitItem.target = self
+        let languageMenu = NSMenu()
+        for language in AppLanguage.allCases {
+            let item = NSMenuItem(title: "", action: #selector(selectLanguage(_:)), keyEquivalent: "")
+            item.target = self
+            item.representedObject = language.rawValue
+            languageMenuItems[language] = item
+            languageMenu.addItem(item)
+        }
+        languageMenuItem.submenu = languageMenu
 
         let menu = NSMenu()
         menu.addItem(statusMenuItem)
         menu.addItem(lastResumeMenuItem)
         menu.addItem(.separator())
         menu.addItem(toggleMenuItem)
-        menu.addItem(permissionsItem)
+        menu.addItem(languageMenuItem)
+        menu.addItem(permissionsMenuItem)
         menu.addItem(.separator())
-        menu.addItem(quitItem)
+        menu.addItem(quitMenuItem)
         statusItem.menu = menu
+        updateLocalizedMenu()
     }
 
     private func promptForAccessibilityPermission() {
@@ -184,9 +244,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.button?.image = icon
     }
 
-    private func setStatus(_ title: String, icon: String) {
-        statusMenuItem.title = title
+    private func setStatus(_ key: String, icon: String) {
+        currentStatusKey = key
+        statusMenuItem.title = localized(key)
         setIcon(icon)
+    }
+
+    private func updateLocalizedMenu() {
+        statusMenuItem.title = localized(currentStatusKey)
+        if let lastResumeDate {
+            lastResumeMenuItem.title = String(format: localized("lastResume.format"), formattedTime(lastResumeDate))
+        } else {
+            lastResumeMenuItem.title = localized("lastResume.none")
+        }
+        toggleMenuItem.title = localized(monitoring ? "action.pause" : "action.resume")
+        languageMenuItem.title = localized("menu.language")
+        permissionsMenuItem.title = localized("action.settings")
+        quitMenuItem.title = localized("action.quit")
+
+        let selectedLanguage = selectedAppLanguage()
+        for language in AppLanguage.allCases {
+            languageMenuItems[language]?.title = localized(language.menuTitleKey)
+            languageMenuItems[language]?.state = language == selectedLanguage ? .on : .off
+        }
     }
 
     @objc private func checkGoal() {
@@ -194,20 +274,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         guard AXIsProcessTrusted() else {
-            setStatus(localized("status.permissionRequired"), icon: "exclamationmark.triangle")
+            setStatus("status.permissionRequired", icon: "exclamationmark.triangle")
             return
         }
         guard Date() >= nextAllowedPress, currentResumeButton() != nil else {
-            setStatus(localized("status.monitoring"), icon: "dog.fill")
+            setStatus("status.monitoring", icon: "dog.fill")
             return
         }
 
         if clickResumeButton() {
-            let time = Date().formatted(date: .omitted, time: .standard)
-            lastResumeMenuItem.title = String(format: localized("lastResume.format"), time)
-            setStatus(localized("status.resumeSent"), icon: "checkmark.circle")
+            lastResumeDate = Date()
+            updateLocalizedMenu()
+            setStatus("status.resumeSent", icon: "checkmark.circle")
         } else {
-            setStatus(localized("status.clickFailed"), icon: "exclamationmark.triangle")
+            setStatus("status.clickFailed", icon: "exclamationmark.triangle")
         }
         nextAllowedPress = Date().addingTimeInterval(retryCooldown)
     }
@@ -216,11 +296,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         monitoring.toggle()
         toggleMenuItem.title = localized(monitoring ? "action.pause" : "action.resume")
         if monitoring {
-            setStatus(localized("status.monitoring"), icon: "dog.fill")
+            setStatus("status.monitoring", icon: "dog.fill")
             checkGoal()
         } else {
-            setStatus(localized("status.paused"), icon: "pause.circle")
+            setStatus("status.paused", icon: "pause.circle")
         }
+    }
+
+    @objc private func selectLanguage(_ sender: NSMenuItem) {
+        guard let value = sender.representedObject as? String,
+              let language = AppLanguage(rawValue: value) else {
+            return
+        }
+        UserDefaults.standard.set(language.rawValue, forKey: appLanguageDefaultsKey)
+        updateLocalizedMenu()
     }
 
     @objc private func openAccessibilitySettings() {
@@ -240,8 +329,10 @@ if CommandLine.arguments.contains("--self-test") {
     precondition(isResumeDescription("恢复目标"))
     precondition(isResumeDescription("Resume goal"))
     precondition(!isResumeDescription("停止"))
-    precondition(localized("cli.selfTestPassed") != "cli.selfTestPassed")
-    print(localized("cli.selfTestPassed"))
+    precondition(localized("cli.selfTestPassed", language: .system) != "cli.selfTestPassed")
+    precondition(localized("cli.selfTestPassed", language: .english) == "Self-test passed.")
+    precondition(localized("cli.selfTestPassed", language: .traditionalChinese) == "自我測試通過。")
+    print(localized("cli.selfTestPassed", language: .system))
     exit(0)
 }
 

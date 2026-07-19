@@ -3,6 +3,10 @@
 "lastResume.format" = "Last resumed: %@";
 "action.pause" = "Pause monitoring";
 "action.resume" = "Resume monitoring";
+"menu.language" = "Language";
+"language.system" = "System Default";
+"language.english" = "English";
+"language.traditionalChinese" = "Traditional Chinese";
 "action.settings" = "Open Accessibility Settings…";
 "action.quit" = "Quit";
 "status.permissionRequired" = "Accessibility permission required";

@@ -3,6 +3,10 @@
 "lastResume.format" = "最近恢復：%@";
 "action.pause" = "暫停監控";
 "action.resume" = "繼續監控";
+"menu.language" = "語言";
+"language.system" = "跟隨系統";
+"language.english" = "English";
+"language.traditionalChinese" = "繁體中文";
 "action.settings" = "開啟輔助使用設定…";
 "action.quit" = "結束";
 "status.permissionRequired" = "需要輔助使用權限";
