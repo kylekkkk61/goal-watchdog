@@ -8,6 +8,7 @@ rm -rf "$app_dir"
 mkdir -p "$app_dir/Contents/MacOS" "$app_dir/Contents/Resources"
 
 xcrun swiftc -warnings-as-errors \
+    -target "$(uname -m)-apple-macosx14.0" \
     "$repo_root/Sources/ChatGPTGoalWatchdog/main.swift" \
     -o "$app_dir/Contents/MacOS/ChatGPTGoalWatchdog"
 
@@ -21,4 +22,3 @@ codesign --force \
     "$app_dir"
 
 echo "Built: $app_dir"
-
