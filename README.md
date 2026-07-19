@@ -72,9 +72,10 @@ This compiles the app, runs its small language-matching self-test, validates the
 - [Security policy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 - [Release process](RELEASING.md)
+- [MIT License](LICENSE)
 
 ## Release status and license
 
 Releases are source-only unless the project later adopts Developer ID signing and Apple notarization. Automatic updates are intentionally out of scope.
 
-An open-source license has not been selected yet. Until a license file is added, the source remains copyright-protected and the repository must not be described as open source.
+The source is available under the [MIT License](LICENSE).

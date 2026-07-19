@@ -9,10 +9,10 @@
 
 ## Public-readiness checklist
 
-- [ ] Select and add an open-source `LICENSE` file.
-- [ ] Enable GitHub private vulnerability reporting and verify the link described in `SECURITY.md`.
+- [x] Select and add an open-source `LICENSE` file.
+- [ ] Enable GitHub private vulnerability reporting immediately after making the repository public, then verify the link described in `SECURITY.md`.
 - [x] Confirm the latest ChatGPT version still exposes a supported Resume goal accessibility description.
-- [ ] Run `./scripts/check.sh` on the minimum supported macOS version and the current macOS version.
+- [ ] Run `./scripts/check.sh` on the minimum supported macOS version and the current macOS version. CI covers macOS 14; the current macOS check is also required before tagging.
 - [x] Review tracked files and Git history for secrets, personal data, and private ChatGPT content.
 - [ ] Review the project name, app name, description, icon, topics, and screenshots against the current OpenAI brand guidelines; rename or obtain permission if required, and do not imply affiliation with OpenAI.
 - [ ] Create a source-only version tag and GitHub release notes.

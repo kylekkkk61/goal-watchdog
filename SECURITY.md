@@ -6,7 +6,7 @@ Only the latest source on the default branch is supported during the pre-release
 
 ## Reporting a vulnerability
 
-Do not disclose a suspected vulnerability in a public issue. After the repository becomes public, use GitHub's private vulnerability reporting form in the repository's **Security** tab. The repository must remain private until that reporting channel is enabled.
+Do not disclose a suspected vulnerability in a public issue. After the repository becomes public, use GitHub's private vulnerability reporting form in the repository's **Security** tab. This feature can only be enabled after the repository is public and must be enabled immediately when its visibility changes.
 
 Include the affected revision, macOS version, reproduction steps, and impact. Do not include private conversation content, credentials, or other sensitive data.
 
