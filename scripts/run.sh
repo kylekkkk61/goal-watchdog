@@ -10,6 +10,11 @@ if [[ ! -x "$binary" \
     || "$repo_root/Config/GoalWatchdog.entitlements" -nt "$binary" \
     || "$repo_root/Resources/AppIcon.icns" -nt "$binary" \
     || "$repo_root/Resources/MenuBarIcon.png" -nt "$binary" \
+    || "$repo_root/Resources/en.lproj/Localizable.strings" -nt "$binary" \
+    || "$repo_root/Resources/en.lproj/InfoPlist.strings" -nt "$binary" \
+    || "$repo_root/Resources/zh-Hant.lproj/Localizable.strings" -nt "$binary" \
+    || "$repo_root/Resources/zh-Hant.lproj/InfoPlist.strings" -nt "$binary" \
+    || "$repo_root/scripts/localization.sh" -nt "$binary" \
     || "$repo_root/scripts/build.sh" -nt "$binary" ]]; then
     "$repo_root/scripts/build.sh"
 fi

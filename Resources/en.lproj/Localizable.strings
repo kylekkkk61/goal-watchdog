@@ -1,0 +1,12 @@
+"status.monitoring" = "Monitoring";
+"lastResume.none" = "Last resumed: Never";
+"lastResume.format" = "Last resumed: %@";
+"action.pause" = "Pause monitoring";
+"action.resume" = "Resume monitoring";
+"action.settings" = "Open Accessibility Settings…";
+"action.quit" = "Quit";
+"status.permissionRequired" = "Accessibility permission required";
+"status.resumeSent" = "Resume click sent";
+"status.clickFailed" = "Unable to click safely";
+"status.paused" = "Paused";
+"cli.selfTestPassed" = "Self-test passed.";

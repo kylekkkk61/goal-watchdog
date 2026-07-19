@@ -7,6 +7,10 @@ let pollInterval: TimeInterval = 5
 let retryCooldown: TimeInterval = 15
 let resumeDescriptions = Set(["恢復目標", "恢复目标", "Resume goal"])
 
+func localized(_ key: String) -> String {
+    NSLocalizedString(key, comment: "")
+}
+
 func attribute(_ element: AXUIElement, _ name: String) -> CFTypeRef? {
     var value: CFTypeRef?
     return AXUIElementCopyAttributeValue(element, name as CFString, &value) == .success ? value : nil
@@ -122,9 +126,9 @@ func clickResumeButton() -> Bool {
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-    private let statusMenuItem = NSMenuItem(title: "監控中", action: nil, keyEquivalent: "")
-    private let lastResumeMenuItem = NSMenuItem(title: "最近恢復：尚無", action: nil, keyEquivalent: "")
-    private let toggleMenuItem = NSMenuItem(title: "暫停監控", action: #selector(toggleMonitoring), keyEquivalent: "")
+    private let statusMenuItem = NSMenuItem(title: localized("status.monitoring"), action: nil, keyEquivalent: "")
+    private let lastResumeMenuItem = NSMenuItem(title: localized("lastResume.none"), action: nil, keyEquivalent: "")
+    private let toggleMenuItem = NSMenuItem(title: localized("action.pause"), action: #selector(toggleMonitoring), keyEquivalent: "")
     private var timer: Timer?
     private var monitoring = true
     private var nextAllowedPress = Date.distantPast
@@ -143,11 +147,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusMenuItem.isEnabled = false
         lastResumeMenuItem.isEnabled = false
 
-        let permissionsItem = NSMenuItem(title: "開啟輔助使用設定…", action: #selector(openAccessibilitySettings), keyEquivalent: "")
+        let permissionsItem = NSMenuItem(title: localized("action.settings"), action: #selector(openAccessibilitySettings), keyEquivalent: "")
         permissionsItem.target = self
         toggleMenuItem.target = self
 
-        let quitItem = NSMenuItem(title: "結束", action: #selector(quit), keyEquivalent: "q")
+        let quitItem = NSMenuItem(title: localized("action.quit"), action: #selector(quit), keyEquivalent: "q")
         quitItem.target = self
 
         let menu = NSMenu()
@@ -190,32 +194,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         guard AXIsProcessTrusted() else {
-            setStatus("需要輔助使用權限", icon: "exclamationmark.triangle")
+            setStatus(localized("status.permissionRequired"), icon: "exclamationmark.triangle")
             return
         }
         guard Date() >= nextAllowedPress, currentResumeButton() != nil else {
-            setStatus("監控中", icon: "dog.fill")
+            setStatus(localized("status.monitoring"), icon: "dog.fill")
             return
         }
 
         if clickResumeButton() {
             let time = Date().formatted(date: .omitted, time: .standard)
-            lastResumeMenuItem.title = "最近恢復：\(time)"
-            setStatus("已送出恢復點擊", icon: "checkmark.circle")
+            lastResumeMenuItem.title = String(format: localized("lastResume.format"), time)
+            setStatus(localized("status.resumeSent"), icon: "checkmark.circle")
         } else {
-            setStatus("無法安全點擊", icon: "exclamationmark.triangle")
+            setStatus(localized("status.clickFailed"), icon: "exclamationmark.triangle")
         }
         nextAllowedPress = Date().addingTimeInterval(retryCooldown)
     }
 
     @objc private func toggleMonitoring() {
         monitoring.toggle()
-        toggleMenuItem.title = monitoring ? "暫停監控" : "繼續監控"
+        toggleMenuItem.title = localized(monitoring ? "action.pause" : "action.resume")
         if monitoring {
-            setStatus("監控中", icon: "dog.fill")
+            setStatus(localized("status.monitoring"), icon: "dog.fill")
             checkGoal()
         } else {
-            setStatus("已暫停", icon: "pause.circle")
+            setStatus(localized("status.paused"), icon: "pause.circle")
         }
     }
 
@@ -236,7 +240,8 @@ if CommandLine.arguments.contains("--self-test") {
     precondition(isResumeDescription("恢复目标"))
     precondition(isResumeDescription("Resume goal"))
     precondition(!isResumeDescription("停止"))
-    print("Self-test passed.")
+    precondition(localized("cli.selfTestPassed") != "cli.selfTestPassed")
+    print(localized("cli.selfTestPassed"))
     exit(0)
 }
 

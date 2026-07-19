@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDevelopmentRegion</key>
-    <string>zh_TW</string>
+    <string>en</string>
     <key>CFBundleDisplayName</key>
     <string>Goal Watchdog</string>
     <key>CFBundleExecutable</key>
@@ -14,6 +14,11 @@
     <string>AppIcon</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>zh-Hant</string>
+    </array>
     <key>CFBundleName</key>
     <string>Goal Watchdog</string>
     <key>CFBundlePackageType</key>
@@ -29,7 +34,7 @@
     <key>LSUIElement</key>
     <true/>
     <key>NSAppleEventsUsageDescription</key>
-    <string>需要短暫喚醒 ChatGPT，才能安全地按下恢復目標按鈕。</string>
+    <string>Goal Watchdog temporarily activates ChatGPT to safely click Resume goal.</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
 </dict>

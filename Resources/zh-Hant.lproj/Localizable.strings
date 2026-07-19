@@ -1,0 +1,12 @@
+"status.monitoring" = "監控中";
+"lastResume.none" = "最近恢復：尚無";
+"lastResume.format" = "最近恢復：%@";
+"action.pause" = "暫停監控";
+"action.resume" = "繼續監控";
+"action.settings" = "開啟輔助使用設定…";
+"action.quit" = "結束";
+"status.permissionRequired" = "需要輔助使用權限";
+"status.resumeSent" = "已送出恢復點擊";
+"status.clickFailed" = "無法安全點擊";
+"status.paused" = "已暫停";
+"cli.selfTestPassed" = "自我測試通過。";
