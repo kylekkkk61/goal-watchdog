@@ -1,18 +1,20 @@
-# ChatGPT Goal Watchdog
+<p align="center">
+  <img src="Resources/ReadmeBanner.png" alt="Goal Watchdog" width="1080">
+</p>
 
-![ChatGPT Goal Watchdog icon](Resources/AppIcon.png)
+<p align="center">
+  <strong>English</strong> · <a href="README.zh-TW.md">繁體中文</a>
+</p>
 
-A small macOS watchdog that watches the currently displayed conversation in the ChatGPT desktop app. When Goal mode exposes a **Resume goal** button, the watchdog clicks it and restores the previous app and pointer position.
+Goal Watchdog is a lightweight macOS menu bar utility that watches the conversation currently displayed in the ChatGPT desktop app. When Goal mode exposes a **Resume goal** button, Goal Watchdog clicks it and restores the previously active app and pointer position.
 
-> Private pre-release. There are no official downloadable binaries. Build and run it locally from source.
-
-## What it does
+## Features
 
 - Watches only the current ChatGPT main window.
-- Resolves the resume button and its position dynamically through macOS Accessibility.
-- Supports `恢復目標`, `恢复目标`, and `Resume goal`.
-- Does not read goal text, capture the screen, or use the network.
-- Runs as a menu bar app without a Dock icon.
+- Locates the resume button dynamically through macOS Accessibility.
+- Recognizes `Resume goal`, `恢復目標`, and `恢复目标`.
+- Does not read goal text, capture the screen, store credentials, or use the network.
+- Runs from Terminal or as a menu bar app without a Dock icon.
 
 ## Requirements
 
@@ -22,49 +24,44 @@ A small macOS watchdog that watches the currently displayed conversation in the 
 
 ## Run from Terminal
 
-The watchdog stays attached to the current Terminal session. Stop it with `Control-C`.
-
 ```sh
 ./scripts/run.sh
 ```
 
-The first run builds the app bundle. Later runs reuse it until a source or configuration file changes.
+Goal Watchdog remains attached to the Terminal session. Press `Control-C` to stop it. The first run builds the app bundle; later runs rebuild only when an input file changes.
 
 ## Build the app
 
 ```sh
 ./scripts/build.sh
-open "dist/ChatGPT Goal Watchdog.app"
+open "dist/Goal Watchdog.app"
 ```
 
-The local build is ad-hoc signed. It is not notarized by Apple, and macOS may require Accessibility authorization again after rebuilding because an ad-hoc signature does not provide a stable identity across versions.
+The project distributes source code rather than downloadable app binaries. Local builds use an ad-hoc signature and are not notarized by Apple, so macOS may request Accessibility authorization again after a rebuild.
 
 ## Permissions
 
-The app needs:
+Goal Watchdog requires:
 
-- **Accessibility** to inspect the ChatGPT window and send the mouse click.
+- **Accessibility** to inspect the current ChatGPT window and post a mouse click.
 - **Automation → ChatGPT** to bring ChatGPT to the foreground before clicking.
 
-No credentials or ChatGPT data are stored.
+If Accessibility remains unavailable after enabling it, remove the existing Goal Watchdog entry from **System Settings → Privacy & Security → Accessibility**, add the newly built app again, and relaunch Goal Watchdog. ChatGPT normally does not need to be restarted.
 
-If permission remains unavailable after enabling it, remove the existing ChatGPT Goal Watchdog entry from Accessibility, add the newly built app again, and relaunch the watchdog. ChatGPT itself does not normally need to be restarted.
-
-## Verify a build
+## Verify the project
 
 ```sh
 ./scripts/check.sh
 ```
 
-This compiles the app, runs its small language-matching self-test, validates the property list, and verifies the local signature.
+The check builds the app, runs the button-language self-test, validates the property list and local signature, and confirms that the binary supports macOS 14.
 
-## Scope and limitations
+## Limitations
 
 - Only the conversation shown in ChatGPT's current main window is monitored.
-- The watchdog reacts to the accessible button descriptions `恢復目標`, `恢复目标`, and `Resume goal`.
-- ChatGPT must be running and the relevant button must be present in the current conversation.
-- UI or accessibility changes in ChatGPT may require a watchdog update.
-- This is an independent community project and is not affiliated with or endorsed by OpenAI.
+- ChatGPT must be running, with a supported Resume goal button visible in the current conversation.
+- Changes to ChatGPT's interface or Accessibility hierarchy may require a Goal Watchdog update.
+- Goal Watchdog is an independent community project and is not affiliated with or endorsed by OpenAI.
 
 ## Project documents
 
@@ -74,8 +71,6 @@ This compiles the app, runs its small language-matching self-test, validates the
 - [Release process](RELEASING.md)
 - [MIT License](LICENSE)
 
-## Release status and license
+## License
 
-Releases are source-only unless the project later adopts Developer ID signing and Apple notarization. Automatic updates are intentionally out of scope.
-
-The source is available under the [MIT License](LICENSE).
+Goal Watchdog is available under the [MIT License](LICENSE).

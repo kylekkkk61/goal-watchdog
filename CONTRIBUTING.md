@@ -11,4 +11,4 @@ Contributions should stay within the project's narrow purpose: safely resuming a
 
 For behavior changes, explain the user-visible problem, the smallest proposed solution, and how it was verified. Never include private ChatGPT content in issues, logs, screenshots, or test data.
 
-This repository does not require a Contributor License Agreement. By contributing after an open-source license is added, you agree that your contribution is provided under that repository license.
+This repository does not require a Contributor License Agreement. By submitting a contribution, you agree to provide it under the project's MIT License.

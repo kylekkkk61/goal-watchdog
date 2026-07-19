@@ -5,17 +5,17 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>zh_TW</string>
     <key>CFBundleDisplayName</key>
-    <string>ChatGPT Goal Watchdog</string>
+    <string>Goal Watchdog</string>
     <key>CFBundleExecutable</key>
-    <string>ChatGPTGoalWatchdog</string>
+    <string>GoalWatchdog</string>
     <key>CFBundleIdentifier</key>
-    <string>io.github.kylekkkk61.chatgpt-goal-watchdog</string>
+    <string>io.github.kylekkkk61.goal-watchdog</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>ChatGPT Goal Watchdog</string>
+    <string>Goal Watchdog</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

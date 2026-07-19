@@ -1,6 +1,6 @@
 # Privacy
 
-ChatGPT Goal Watchdog runs entirely on the local Mac.
+Goal Watchdog runs entirely on the local Mac.
 
 It uses macOS Accessibility APIs to inspect the current ChatGPT main window for a supported **Resume goal** button. When found, it temporarily activates ChatGPT and sends a mouse click to that button.
 

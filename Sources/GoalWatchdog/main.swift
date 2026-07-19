@@ -138,7 +138,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func configureMenu() {
         setIcon("dog.fill")
-        statusItem.button?.toolTip = "ChatGPT Goal Watchdog"
+        statusItem.button?.toolTip = "Goal Watchdog"
 
         statusMenuItem.isEnabled = false
         lastResumeMenuItem.isEnabled = false
@@ -167,8 +167,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func setIcon(_ symbolName: String) {
-        statusItem.button?.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "ChatGPT Goal Watchdog")
-        statusItem.button?.image?.isTemplate = true
+        let icon: NSImage?
+        if symbolName == "dog.fill",
+           let url = Bundle.main.url(forResource: "MenuBarIcon", withExtension: "png"),
+           let menuBarIcon = NSImage(contentsOf: url) {
+            menuBarIcon.size = NSSize(width: 18, height: 18)
+            icon = menuBarIcon
+        } else {
+            icon = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Goal Watchdog")
+        }
+        icon?.isTemplate = true
+        statusItem.button?.image = icon
     }
 
     private func setStatus(_ title: String, icon: String) {
